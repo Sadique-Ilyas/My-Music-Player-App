@@ -351,14 +351,34 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mediaPlayer.stop();
             mediaPlayer.release();
             if (uri != null) {
-                mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
-                mediaPlayer.start();
+                try {
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+                    mediaPlayer.prepareAsync();
+                } catch (Exception e) {
+
+                }
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
             } else {
                 Toast.makeText(this, "Can't play this song", Toast.LENGTH_SHORT).show();
             }
         } else {
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
-            mediaPlayer.start();
+            try {
+                mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+                mediaPlayer.prepareAsync();
+            } catch (Exception e) {
+
+            }
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
         }
 
         seekBar.setMax(mediaPlayer.getDuration() / 1000);
